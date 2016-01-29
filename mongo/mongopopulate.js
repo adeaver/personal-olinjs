@@ -7,21 +7,15 @@ db.on('error', console.error);
 
 mongoose.connect('mongodb://localhost/nodetest');
 
-var popSchema = new mongoose.Schema({
-	year:{type:String},
-	population:{type:String},
-	growth:{type:Number}
-});
-
 var countrySchema = new mongoose.Schema({
-	name:{type:String},
-	populations:{type:Array},
-	type:{type:String},
-	continent:{type:String}
+	country:{type:String},
+	growth:{type:Number},
+	year:{type:Number},
+	population:{type:Number}
 });
 
-var Population = mongoose.model('Population', popSchema);
-var Country = mongoose.model('Country', countrySchema);
+var Country = mongoose.model("Country", countrySchema);
+
 var continents = ["North America", "Central & South America", "Europe", "Eurasia", "Middle East", "Africa", "Asia & Oceania", "World"]
 var continentsIndex = -1
 
@@ -30,11 +24,7 @@ var file = fs.readFile("populationbycountry19802010millions.csv", function callb
 	var references = entries[0].split(",");
 
 	for(var index = 1; index < entries.length; index++) {
-		var popData = unpackLine(references, entries[index]);
-
-		popData.save(function(err, popData) {
-			if(err) { return console.error(err); }
-		});
+		unpackLine(references, entries[index]);
 	}
 
 	console.log("Complete");
@@ -48,37 +38,38 @@ function calcGrowth(newPop, oldPop) {
 	return (parseFloat(newPop)-parseFloat(oldPop))/oldPop * 100;
 }
 
-function unpackLine(ref, line) {
+function unpackLine(references, line) {
 	var lineData = line.split(",")
-	var pops = []
+	var countryName = lineData[0];
 
 	for(var index = 1; index < lineData.length; index++) {
-		var growth = index > 1 ? calcGrowth(lineData[index], pops[index-2].population) : 0;
-		var info = {
-			year:ref[index],
-			population:lineData[index],
-			growth:growth
-		};
-		pops.push(info);
+		if(continents.indexOf(countryName) == -1) {
+			var year = parseInt(references[index]);
+			if(index > 1) {
+				var oldPop = lineData[index-1];
+				console.log(index-1);
+				var pop = lineData[index];
+				var growth = calcGrowth(pop, oldPop);
+				pop = pop != "NA" && pop != "--" ? parseFloat(pop) : 0;
+			} else {
+				var pop = lineData[index] != "NA" && lineData[index] != "--" ? parseFloat(lineData[index]) : 0;
+				var growth = 0;
+			}
+
+			var country = new Country({
+				year:year,
+				growth:growth,
+				country:countryName,
+				population:pop
+			});
+
+			country.save(function(err, country) {
+				if(err) {
+					return console.error(err);
+				}
+			});
+		}
 	}
-
-	console.log(pops.length);
-
-	if(continents.indexOf(lineData[0]) != -1) {
-		continentsIndex++;
-		type = lineData[0] == "World" ? "world" : "continent";
-	} else {
-		type = "country";
-	}
-
-	var countryInfo = new Country({
-		name:lineData[0],
-		populations:pops,
-		continent:continents[continentsIndex],
-		type:type
-	});
-
-	return countryInfo;
 }
 
 // var Movie = mongoose.model('Movie', movieSchema);

@@ -6,41 +6,52 @@ var addData = function(req, res) {
 	// Population data should be csv format
 	console.log(req.body);
 
-	var name = req.body.name;
-	var type = req.body.type;
-	var continent = req.body.continent;
-	var pop = unpackLine(req.body.years, req.body.populations);
+	var countryName = req.body.name;
+	var years = req.body.years.split(",");
+	var populations = req.body.populations.split(",");
 
-	var insert = new Country({
-		name:name,
-		continent:continent,
-		type:type,
-		populations:pop
-	});
+	var error = unpackLine(years, populations, countryName);
 
-	insert.save(function(err, insert) {
-		var message = err === null ? "successful" : "error occurred";
-		res.render("home", {data:message});
-	});
+	if(error) {
+		message = "error"
+	} else {
+		message = "successful"
+	}
+
+	res.render("home", {data:message});
 
 };
 
-function unpackLine(yearLine, popLine) {
-	var popData = popLine.split(",")
-	var yearData = yearLine.split(",")
-	var pops = []
+function unpackLine(years, pops, countryName) {
+	var errorOccurred = false;
 
-	for(var index = 0; index < popData.length; index++) {
-		var growth = index > 0 ? calcGrowth(popData[index], pops[index-1].population) : 0;
-		var info = {
-			year:yearData[index],
-			population:popData[index],
-			growth:growth
-		};
-		pops.push(info);
+	for(var index = 0; index < pops.length; index++) {
+		var year = parseInt(years[index]);
+		if(index > 0) {
+			var oldPop = pops[index-1];
+			var pop = pops[index];
+			var growth = calcGrowth(pop, oldPop);
+			pop = pop != "NA" && pop != "--" ? parseFloat(pop) : 0;
+		} else {
+			var pop = pops[index] != "NA" && pops[index] != "--" ? parseFloat(pops[index]) : 0;
+			var growth = 0;
+		}
+
+		var country = new Country({
+			year:year,
+			growth:growth,
+			country:countryName,
+			population:pop
+		});
+
+		country.save(function(err, country) {
+			if(err) {
+				errorOccurred = true;
+			}
+		});
 	}
 
-	return pops;
+	return errorOccurred;
 }
 
 function calcGrowth(newPop, oldPop) {

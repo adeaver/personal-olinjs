@@ -1,10 +1,10 @@
 var mongoose = require('mongoose');
 
 var countrySchema = new mongoose.Schema({
-	name:{type:String},
-	populations:{type:Array},
-	type:{type:String},
-	continent:{type:String}
+	country:{type:String},
+	growth:{type:Number},
+	year:{type:Number},
+	population:{type:Number}
 });
 
 module.exports = mongoose.model('Country', countrySchema);
