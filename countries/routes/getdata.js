@@ -1,16 +1,15 @@
 var mongoose = require('mongoose');
 var Country = require('../models/country');
 
-var home = function(req, res){
-
-	Country.find(function(err, countries) {
+var getData = function(req, res) {
+	
+	Country.find(req.query, function(err, countries) {
 		var data = []
-		if (err === null) {
+		if(err === null) {
 			data = countries;
 		}
-
 		res.render("home", {data:countries});
 	});
 };
 
-module.exports.home = home;
+module.exports.getData = getData;

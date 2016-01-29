@@ -1,0 +1,4 @@
+Directories:
+	- Models (mongoose schemas go in here)
+	- Routes (multiple files with routes for chunks of program)
+	- Public (static files)
