@@ -4,11 +4,11 @@ var Country = require('../models/country');
 var getData = function(req, res) {
 	
 	Country.find(req.query, function(err, countries) {
-		var data = []
+		var data = {}
 		if(err === null) {
-			data = countries;
+			data = countries.length > 0 ? countries : "{message:'no data'}";
 		}
-		res.render("home", {data:countries});
+		res.render("home", {data:data});
 	});
 };
 
