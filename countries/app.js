@@ -8,6 +8,7 @@ var index = require('./routes/index');
 var getData = require('./routes/getdata');
 var addData = require('./routes/adddata');
 var removeData = require('./routes/removedata');
+var view = require('./routes/view');
 
 app.use( bodyParser.json() ); 
 app.use(bodyParser.urlencoded({
@@ -23,5 +24,6 @@ app.get('/', index.home);
 app.get('/data', getData.getData);
 app.get('/delete', removeData.removeData);
 app.post('/add', addData.addData);
+app.get('/view', view.view);
 
 app.listen(3000);

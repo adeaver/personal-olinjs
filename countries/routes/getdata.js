@@ -8,7 +8,7 @@ var getData = function(req, res) {
 		if(err === null) {
 			data = countries.length > 0 ? countries : "{message:'no data'}";
 		}
-		res.render("home", {data:data});
+		res.send(data);
 	});
 };
 

@@ -1,0 +1,81 @@
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<!--<script type="text/javascript">
+  google.charts.load('current', {'packages':['geochart']});
+  google.charts.setOnLoadCallback(drawRegionsMap);
+
+  function drawRegionsMap() {
+
+    var data = google.visualization.arrayToDataTable([
+      ['Country', 'Growth'],
+      {{#each data}}
+        ["{{this.country}}", {{this.growth}}],
+      {{/each}}
+    ]);
+
+    var options = {};
+
+    var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
+
+    chart.draw(data, options);
+  }
+</script>-->
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    google.charts.load('current', {'packages':['geochart']});
+
+    var url = "http://127.0.0.1:3000/data?year=" + $("#year").val();
+    console.log(url);
+
+    $.ajax({url:url, success:function(result) {
+      google.charts.setOnLoadCallback(drawRegionsMap);
+
+      function drawRegionsMap() {
+        var array1 = [['Country', 'Growth']];
+
+        for(var index = 0; index < result.length; index++) {
+          array1.push([result[index].country, result[index].growth]);
+        }
+
+        var data = google.visualization.arrayToDataTable(array1);
+
+        var options = {colorAxis:{maxValue:3, minValue:-3, colors:["#FF0000", "#FFFFFF", "#008000"]}};
+
+        var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
+
+        chart.draw(data, options);
+      }
+    }});
+    
+    $("#year").change(function() {
+      $("#value").html($("#year").val());
+
+      var url = "http://127.0.0.1:3000/data?year=" + $("#year").val();
+      console.log(url);
+
+      $.ajax({url:url, success:function(result) {
+        google.charts.setOnLoadCallback(drawRegionsMap);
+
+        function drawRegionsMap() {
+          var array1 = [['Country', 'Growth']];
+
+          for(var index = 0; index < result.length; index++) {
+            array1.push([result[index].country, result[index].growth]);
+          }
+
+          var data = google.visualization.arrayToDataTable(array1);
+
+          var options = {colorAxis:{maxValue:3, minValue:-3, colors:["#FF0000", "#FFFFFF", "#008000"]}};
+
+          var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
+
+          chart.draw(data, options);
+        }
+      }});
+    });
+  });
+</script>
+
+<div id="regions_div" style="width: 900px; height: 500px;"></div>
+<span id="value">1980</span> <input type="range" min="1980" max="2010" id="year" value="1980" name="year"/>

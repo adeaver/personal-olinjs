@@ -18,7 +18,7 @@ var addData = function(req, res) {
 		message = "successful"
 	}
 
-	res.render("home", {data:message});
+	res.send({"message":message});
 
 };
 
