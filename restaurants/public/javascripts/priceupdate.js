@@ -1,11 +1,22 @@
 var quantites = [];
 var totalPrice = 0;
 
-function updatePrice(element, name, price, quantity) {
-	var oldValue = searchQuantities(name, element.value);
-	totalPrice = totalPrice + price * (element.value-oldValue);
+function clearQuantities() {
+	quantites = [];
+	totalPrice = 0;
+}
 
-	$("#total_price").text("$" + totalPrice.toFixed(2).toString());
+function updatePrice(element, name, price, quantity) {
+	var q = parseInt(quantity);
+	if(element.value <= q) {
+		var oldValue = searchQuantities(name, element.value);
+		totalPrice = totalPrice + price * (element.value-oldValue);
+
+		$("#total_price").text("$" + totalPrice.toFixed(2).toString());
+	} else {
+		alert("You can not exceed the quantity of items available!");
+		element.value = q;
+	}
 }
 
 function searchQuantities(name, quantity) {

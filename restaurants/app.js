@@ -6,6 +6,7 @@ var mongoose = require('mongoose');
 var app = express();
 
 var ingredients = require('./routes/ingredients.js');
+var orders = require('./routes/orders.js');
 
 app.use( bodyParser.json() ); 
 app.use(bodyParser.urlencoded({
@@ -21,5 +22,10 @@ mongoose.connect('mongodb://localhost/restaurant');
 app.get('/ingredients/', ingredients.home);
 app.get('/ingredients/data', ingredients.getData);
 app.get('/ingredients/update', ingredients.create);
+
+app.get('/order', orders.home);
+app.get('/order/add', orders.add);
+app.get('/order/remove', orders.remove);
+app.get('/order/data', orders.getData);
 
 app.listen(3000);

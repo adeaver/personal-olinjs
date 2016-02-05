@@ -1,11 +1,12 @@
 <script type="text/javascript" src="../javascripts/priceupdate.js">
 </script>
+<script type="text/javascript" src="../javascripts/showorderable.js">
+</script>
 
-<form method="GET" action="#">
-	{{#each data}}
-		<label for="{{this.name}}">{{this.name}}</label>
-		<input type="number" name="{{this.name}}" placeholder="Amount" oninput="updatePrice(this, {{this.name}}, {{this.price}}, {{this.quantity}})" /><br />
-	{{/each}}
-</form>
+<table id="order_space">
+
+</table>
+
+<input type="submit" value="Order" onclick="sendData()" />
 
 <p>Price: <span id="total_price">$0.00</span></p>
