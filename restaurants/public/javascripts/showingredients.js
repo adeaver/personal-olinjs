@@ -36,8 +36,8 @@ function buildInputs(type, id_prefix, name, value, currentQuantity, isSubmit) {
 	var id = id_prefix + name.replace(/\s+/g, '');
 	var input = "<input type=\"" + type + "\" ";
 	input += "id=\"" + id + "\" ";
-	input += "value=\"" + value + "\"";
-	input += isSubmit ? "onclick=\"updateQuantities('" + name + "', '" + currentQuantity + "')\" " : "";
+	input += "value=\"" + value + "\" ";
+	input += isSubmit ? "onclick=\"updateQuantities('" + name + "', '" + currentQuantity + "')\" " : "min=\"0\"";
 	input += "/>";
 
 	return input;
@@ -58,10 +58,11 @@ function refreshData() {
 				var style = result[index].quantity > 0 ? "" : "style=\"background-color:red;\" ";
 				var row = "<tr " + style + ">";
 
-				// TODO clean this up
+				var quantityDisplay = result[index].quantity > 0 ? result[index].quantity : "Out of Stock";
+
 				row += "<td>" + result[index].name + "</td>";
 				row += "<td>" + result[index].price + "</td>";
-				row += "<td>" + result[index].quantity + "</td>";
+				row += "<td>" + quantityDisplay + "</td>";
 				row += "<td>" + buildInputs("number", "restock_", result[index].name, 0, 0, false) + "<br />";
 				row += buildInputs("submit", "restock_submit_", result[index].name, "Restock", result[index].quantity, true) + "</td>";
 				row += "</tr>";

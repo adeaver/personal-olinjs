@@ -8,7 +8,12 @@ function showOrders() {
 	$.ajax({
 		url:url,
 		success: function(result) {
-			$("#display_area").html("");
+
+			var baseRow = "<tr id=\"baseRow\"><td>Ingredients</td><td>Total Price</td><td>Complete</td></tr>";
+			
+			if(!$("#baseRow")) {
+				$("#display_area").append(baseRow);
+			}
 
 			for(var index = 0; index < result.length; index++) {
 				var row = "<tr>";
