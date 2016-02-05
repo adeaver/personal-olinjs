@@ -55,8 +55,8 @@ function refreshData() {
 		url:url,
 		success:function(result) {
 			for(var index = 0; index < result.length; index++) {
-				var rowClass = result[index].quantity > 0 ? "stocked" : "restock";
-				var row = "<tr class=\"" + rowClass + "\">";
+				var style = result[index].quantity > 0 ? "" : "style=\"background-color:red;\" ";
+				var row = "<tr " + style + ">";
 
 				// TODO clean this up
 				row += "<td>" + result[index].name + "</td>";
