@@ -38,7 +38,7 @@ function sendData() {
 			ids += items[index].name + delimiter;
 			amounts += items[index].value + delimiter;
 
-			var quantityTag = "#" + items[index].name + "_quantity"
+			var quantityTag = "#" + items[index].name.replace(/\s+/g, '') + "_quantity"
 			var updateQuantity = parseInt($(quantityTag)[0].value) - parseInt(items[index].value);
 
 			var updateUrl = "http://127.0.0.1:3000/ingredients/update?name=" + items[index].name;
@@ -57,6 +57,7 @@ function sendData() {
 	$.ajax({
 		url:url,
 		success:function(result) {
+			console.log(url);
 			alert("Successfully added order");
 			setUpForm();
 		},
@@ -87,7 +88,7 @@ function buildInput(dataObject) {
 
 	// secret input
 	input += "<input type=\"hidden\" ";
-	input += "id=\"" + name + "_quantity\" ";
+	input += "id=\"" + name.replace(/\s+/g, '') + "_quantity\" ";
 	input += "name=\"" + name + "_quantity\" ";
 	input += "value=\"" + quantity + "\" />";
 

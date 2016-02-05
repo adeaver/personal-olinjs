@@ -18,7 +18,7 @@ function addData() {
 }
 
 function updateQuantities(name, currentQuantity) {
-	var id = "#restock_" + name;
+	var id = "#restock_" + name.replace(/\s+/g, '');
 	var value = $(id).val() == "" ? 0 : parseInt($(id).val());
 
 	var url = "http://127.0.0.1:3000/ingredients/update?name=" + name;
@@ -33,10 +33,10 @@ function updateQuantities(name, currentQuantity) {
 }
 
 function buildInputs(type, id_prefix, name, value, currentQuantity, isSubmit) {
-	var id = id_prefix + name;
+	var id = id_prefix + name.replace(/\s+/g, '');
 	var input = "<input type=\"" + type + "\" ";
 	input += "id=\"" + id + "\" ";
-	input += "value=" + value;
+	input += "value=\"" + value + "\"";
 	input += isSubmit ? "onclick=\"updateQuantities('" + name + "', '" + currentQuantity + "')\" " : "";
 	input += "/>";
 
@@ -63,7 +63,7 @@ function refreshData() {
 				row += "<td>" + result[index].price + "</td>";
 				row += "<td>" + result[index].quantity + "</td>";
 				row += "<td>" + buildInputs("number", "restock_", result[index].name, 0, 0, false) + "<br />";
-				row += buildInputs("submit", "restock_submit_", result[index].name, "\"Restock\"", result[index].quantity, true) + "</td>";
+				row += buildInputs("submit", "restock_submit_", result[index].name, "Restock", result[index].quantity, true) + "</td>";
 				row += "</tr>";
 
 				$("#ingredients").append(row);

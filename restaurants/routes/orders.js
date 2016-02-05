@@ -14,13 +14,18 @@ var add = function(req, res) {
 
 	var data = [];
 
+	console.log(names);
+	console.log(amounts);
+
 	for(var index = 0; index < names.length; index++) {
 		var obj = {};
 
 		obj.ingredient = names[index];
 		obj.amount = parseInt(amounts[index]);
 
-		data.push(obj);
+		if(names[index] != "") {
+			data.push(obj);
+		}
 	}
 
 	var order = new Order({
@@ -47,9 +52,9 @@ var remove = function(req, res) {
 }
 
 var getData = function(req, res) {
-	Order.find(function(err, orders) {
+		Order.find(function(err, orders) {
 		var data = err ? [] : orders;
-		res.send(orders);
+		res.send(data);
 	});
 }
 
