@@ -6,8 +6,12 @@ function addData() {
 	var price = $("#price").val();
 	var name = $("#name").val();
 
+	var checkId = "#quantity_" + name;
+
+	var quantity = $(checkId).length && $(checkId).html() != "Out of Stock" ? $(checkId).html() : "0";
+
 	var url = "http://127.0.0.1:3000/ingredients/update?name=" + name;
-	url += "&price=" + price + "&quantity=0";
+	url += "&price=" + price + "&quantity=" + quantity;
 
 	$.ajax({
 		url:url,
@@ -62,7 +66,7 @@ function refreshData() {
 
 				row += "<td>" + result[index].name + "</td>";
 				row += "<td>" + result[index].price + "</td>";
-				row += "<td>" + quantityDisplay + "</td>";
+				row += "<td id=\"quantity_" + result[index].name + "\">" + quantityDisplay + "</td>";
 				row += "<td>" + buildInputs("number", "restock_", result[index].name, 0, 0, false) + "<br />";
 				row += buildInputs("submit", "restock_submit_", result[index].name, "Restock", result[index].quantity, true) + "</td>";
 				row += "</tr>";
