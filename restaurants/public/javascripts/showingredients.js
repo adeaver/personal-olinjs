@@ -1,78 +1,101 @@
-$(document).ready(function() {
-	refreshData();
-});
+var baseUpdateUrl = "http://127.0.0.1:3000/ingredients/update?";
 
-function addData() {
-	var price = $("#price").val();
+function addIngredient() {
 	var name = $("#name").val();
+	var price = $("#price").val();
+	var quantity = $("#quantity").val();
 
-	var checkId = "#quantity_" + name;
+	$("#name").val("");
+	$("#price").val("");
+	$("#quantity").val("");
 
-	var quantity = $(checkId).length && $(checkId).html() != "Out of Stock" ? $(checkId).html() : "0";
+	var params = "name=" + name;
+	params += "&price=" + price;
+	params += "&quantity=" + quantity;
 
-	var url = "http://127.0.0.1:3000/ingredients/update?name=" + name;
-	url += "&price=" + price + "&quantity=" + quantity;
+	var fullUrl = baseUpdateUrl + params;
 
 	$.ajax({
-		url:url,
-		success:function(result) {
-			refreshData();
+		url:fullUrl,
+		success: function(result) {
+			var row = "<tr id=\"" + result._id + "\"></tr>";
+
+			$("#ingredients").append(row);
+			$("#" + result._id).html(updateRow(result));
 		}
 	});
 }
 
-function updateQuantities(name, currentQuantity) {
-	var id = "#restock_" + name.replace(/\s+/g, '');
-	var value = $(id).val() == "" ? 0 : parseInt($(id).val());
+function editPrice(id, name) {
+	var newPrice = $("#price_" + id).val();
+	var params = "name=" + name;
+	params += "&price=" + newPrice;
 
-	var url = "http://127.0.0.1:3000/ingredients/update?name=" + name;
-	url += "&quantity=" + (value+parseInt(currentQuantity));
+	var fullUrl = baseUpdateUrl + params;
 
 	$.ajax({
-		url:url,
-		success:function(result) {
-			refreshData();
+		url:fullUrl,
+		success: function(result) {
+			$("#" + result._id).html(updateRow(result));
 		}
 	});
 }
 
-function buildInputs(type, id_prefix, name, value, currentQuantity, isSubmit) {
-	var id = id_prefix + name.replace(/\s+/g, '');
-	var input = "<input type=\"" + type + "\" ";
-	input += "id=\"" + id + "\" ";
-	input += "value=\"" + value + "\" ";
-	input += isSubmit ? "onclick=\"updateQuantities('" + name + "', '" + currentQuantity + "')\" " : "min=\"0\"";
-	input += "/>";
+function restock(id, name, quantity) {
+	var addQuantity = $("#restock_" + id).val();
+	var newQuantity = parseInt(quantity) + parseInt(addQuantity);
+
+	console.log(newQuantity);
+
+	var params = "name=" + name;
+	params += "&quantity=" + newQuantity;
+
+	var fullUrl = baseUpdateUrl + params;
+
+	$.ajax({
+		url:fullUrl,
+		success: function(result) {
+			$("#" + result._id).html(updateRow(result));
+		}
+	});
+}
+
+function updateRow(result) {
+	var row = "<td>" + result.name + "</td>";
+	row += "<td>" + result.price + "</td>";
+	row += "<td>" + buildPriceInput(result.name, result._id) + "</td>";
+	row += "<td>" + result.quantity + "</td>";
+	row += "<td>" + buildRestockInput(result.name, result._id, result.quantity) + "</td>";
+
+	return row;
+}
+
+function buildRestockInput(name, id, quantity) {
+	var input = "<input type=\"number\" ";
+	input += "name=\"restock_" + id + "\" ";
+	input += "id=\"restock_" + id + "\" ";
+	input += "placeholder=\"Restock ingredient\" ";
+	input += "/><br /> ";
+
+	input += "<input type=\"submit\" ";
+	input += "value=\"Restock\" ";
+	input += "onclick=\"restock('" + id + "', '" + name + "', '" + quantity + "')\" ";
+	input += "/>"
 
 	return input;
 }
 
-function refreshData() {
-	var url = "http://127.0.0.1:3000/ingredients/data";
+function buildPriceInput(id, name) {
+	var input = "<input type=\"number\" ";
+	input += "name=\"price_" + id + "\" ";
+	input += "id=\"price_" + id + "\" ";
+	input += "placeholder=\"Edit Price\" ";
+	input += "/><br /> ";
 
-	$("#ingredients").html("");
+	input += "<input type=\"submit\" ";
+	input += "value=\"Update Price\" ";
+	input += "onclick=\"editPrice('" + id + "', '" + name + "')\" ";
+	input += "/>"
 
-	first_row = "<tr><td>Name</td><td>Price</td><td>Quantity</td><td>Restock Amount</td></tr>";
-	$("#ingredients").append(first_row);
-
-	$.ajax({
-		url:url,
-		success:function(result) {
-			for(var index = 0; index < result.length; index++) {
-				var style = result[index].quantity > 0 ? "" : "style=\"background-color:red;\" ";
-				var row = "<tr " + style + ">";
-
-				var quantityDisplay = result[index].quantity > 0 ? result[index].quantity : "Out of Stock";
-
-				row += "<td>" + result[index].name + "</td>";
-				row += "<td>" + result[index].price + "</td>";
-				row += "<td id=\"quantity_" + result[index].name + "\">" + quantityDisplay + "</td>";
-				row += "<td>" + buildInputs("number", "restock_", result[index].name, 0, 0, false) + "<br />";
-				row += buildInputs("submit", "restock_submit_", result[index].name, "Restock", result[index].quantity, true) + "</td>";
-				row += "</tr>";
-
-				$("#ingredients").append(row);
-			}
-		}
-	});
+	return input;
 }
