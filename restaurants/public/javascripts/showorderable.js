@@ -76,11 +76,5 @@ function buildInput(dataObject) {
 	input += quantity > 0 ? "" : "disabled ";
 	input += "/>";
 
-	// secret input
-	input += "<input type=\"hidden\" ";
-	input += "id=\"" + name.replace(/\s+/g, '') + "_quantity\" ";
-	input += "name=\"" + name + "_quantity\" ";
-	input += "value=\"" + quantity + "\" />";
-
 	return input;
 }
