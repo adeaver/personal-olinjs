@@ -3,14 +3,18 @@
 
 <table id="ingredients">
 	{{#each data}}
-	<tr id={{this._id}}>
+	<tr id={{this._id}} class="quantity_{{this.quantity}}">
 		<td>{{this.name}}</td>
 		<td>{{this.price}}</td>
 		<td>
 			<input type="number" name="price_{{this._id}}" id="price_{{this._id}}" placeholder="Edit Price" /><br />
 			<input type="submit" value="Update Price" onclick="editPrice('{{this._id}}', '{{this.name}}')" />
 		</td>
-		<td>{{this.quantity}}</td>
+			{{#if this.quantity}}
+				<td>{{this.quantity}}</td>
+			{{else}}
+				<td>Out of Stock</td>
+			{{/if}}
 		<td>
 			<input type="number" name="restock_{{this._id}}" id="restock_{{this._id}}" placeholder="Restock Ingredient" /><br />
 			<input type="submit" value="Restock" onclick="restock('{{this._id}}', '{{this.name}}', '{{this.quantity}}')" />

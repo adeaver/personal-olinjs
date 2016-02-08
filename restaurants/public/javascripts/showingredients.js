@@ -22,6 +22,12 @@ function addIngredient() {
 
 			$("#ingredients").append(row);
 			$("#" + result._id).html(updateRow(result));
+
+			if(parseInt(result.quantity) == 0) {
+				$("#" + result._id).css({"background-color": "#A3C00F"});
+			} else {
+				$("#" + result._id).css({"background-color": "#ee6a50"});
+			}
 		}
 	});
 }
@@ -56,15 +62,23 @@ function restock(id, name, quantity) {
 		url:fullUrl,
 		success: function(result) {
 			$("#" + result._id).html(updateRow(result));
+
+			if(parseInt(result.quantity) == 0) {
+				$("#" + result._id).css({"background-color": "#A3C00F"});
+			} else {
+				$("#" + result._id).css({"background-color": "#ee6a50"});
+			}
 		}
 	});
 }
 
 function updateRow(result) {
+	var quantity = result.quantity > 0 ? result.quantity : "Out of Stock";
+
 	var row = "<td>" + result.name + "</td>";
 	row += "<td>" + result.price + "</td>";
 	row += "<td>" + buildPriceInput(result.name, result._id) + "</td>";
-	row += "<td>" + result.quantity + "</td>";
+	row += "<td>" + quantity + "</td>";
 	row += "<td>" + buildRestockInput(result.name, result._id, result.quantity) + "</td>";
 
 	return row;
@@ -85,11 +99,12 @@ function buildRestockInput(name, id, quantity) {
 	return input;
 }
 
-function buildPriceInput(id, name) {
+function buildPriceInput(name, id) {
 	var input = "<input type=\"number\" ";
 	input += "name=\"price_" + id + "\" ";
 	input += "id=\"price_" + id + "\" ";
 	input += "placeholder=\"Edit Price\" ";
+	input += "step=\"0.01\" ";
 	input += "/><br /> ";
 
 	input += "<input type=\"submit\" ";

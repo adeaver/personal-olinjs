@@ -2,5 +2,21 @@
 </script>
 
 <table id="display_area">
-
+	{{#each data}}
+		<tr id={{this._id}}>
+			<td>
+				<ul>
+				{{#each this.contents}}
+					<li>{{this.ingredient}} (x{{this.amount}})</li>	
+				{{/each}}
+				</ul>
+			</td>
+			<td>
+				${{this.price}}
+			</td>
+			<td>
+				<input value="Complete Order" type="Submit" onclick="completeOrder('{{this._id}}')" />
+			</td>
+		</tr>
+	{{/each}}
 </table>

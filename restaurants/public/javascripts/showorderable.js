@@ -37,16 +37,6 @@ function sendData() {
 			var delimiter = index == items.length-1 ? "" : ",";
 			ids += items[index].name + delimiter;
 			amounts += items[index].value + delimiter;
-
-			var quantityTag = "#" + items[index].name.replace(/\s+/g, '') + "_quantity"
-			var updateQuantity = parseInt($(quantityTag)[0].value) - parseInt(items[index].value);
-
-			var updateUrl = "http://127.0.0.1:3000/ingredients/update?name=" + items[index].name;
-			updateUrl += "&quantity=" + updateQuantity;
-
-			$.ajax({
-				url:updateUrl
-			});
 		}
 	}
 

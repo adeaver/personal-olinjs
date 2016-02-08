@@ -23,6 +23,12 @@ var add = function(req, res) {
 		obj.ingredient = names[index];
 		obj.amount = parseInt(amounts[index]);
 
+		Ingredient.update({"name":obj.ingredient}, {"$inc":{"quantity":-1*obj.amount}}, {}, function(err) {
+			if(err) {
+				console.log("Error occurred updating " + obj.ingredient);
+			}
+		});
+
 		if(names[index] != "") {
 			data.push(obj);
 		}
@@ -51,14 +57,6 @@ var remove = function(req, res) {
 	});
 }
 
-var getData = function(req, res) {
-		Order.find(function(err, orders) {
-		var data = err ? [] : orders;
-		res.send(data);
-	});
-}
-
 module.exports.home = home;
 module.exports.add = add;
 module.exports.remove = remove;
-module.exports.getData = getData;
