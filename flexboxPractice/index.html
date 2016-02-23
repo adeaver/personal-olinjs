@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<title>Practice</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<style type="text/css">
+		#container {
+			display:flex;
+			flex-direction:row;
+			justify-content:space-between;
+			width:100%;
+		}
+
+		.contained {
+			margin:10px;
+			background-color: grey;
+		}
+
+		#contained1 {
+			flex-grow:1;
+		}
+
+		#contained2 {
+			flex-grow:2;
+		}
+
+		#contained3 {
+			flex-grow:1;
+		}
+	</style>
+</head>
+
+<body>
+	<div id="container">
+		<div class="contained" id="contained1">some words</div>
+		<div class="contained" id="contained2">some more words</div>
+		<div class="contained" id="contained3">even more words</div>
+	</div>
+</body>
+
+</html>
