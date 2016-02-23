@@ -18,7 +18,7 @@ todoControllers.controller('todoCtrl', function($scope, $http, $compile) {
 			listElement += '<button ng-click="completeItem(\'' + res.data._id + '\')" >';
 			listElement += 'Complete</button> || ';
 			listElement += '<button ng-click="deleteTodoItem(\'' + res.data._id + '\', false)">';
-			listElement += 'Done</button></li>';
+			listElement += 'Delete Item</button></li>';
 
 			var compiledListElement = $compile(listElement)($scope);
 
@@ -30,12 +30,11 @@ todoControllers.controller('todoCtrl', function($scope, $http, $compile) {
 	}
 
 	$scope.deleteTodoItem = function(id, isComplete) {
-		$http.get('/remove/' + id).then(function(res) {
+		$http.post('/remove/' + id).then(function(res) {
 			var elementId = isComplete ? '#complete_' : '#incomplete_';
 			elementId += id;
 
 			var item = angular.element(document.querySelector(elementId));
-			console.log(item);
 			item.remove();
 		}, function(res) {
 			console.log('Error');
@@ -83,7 +82,7 @@ todoControllers.controller('todoCtrl', function($scope, $http, $compile) {
 	}
 
 	$scope.completeItem = function(id) {
-		$http.get('/complete/' + id).then(function(res) {
+		$http.post('/complete/' + id).then(function(res) {
 			var incompleteElement = angular.element(document.querySelector('#incomplete_' + id));
 			incompleteElement.remove();
 
@@ -92,7 +91,7 @@ todoControllers.controller('todoCtrl', function($scope, $http, $compile) {
 			var generateCompleteElement = '<li id="complete_' + id + '">';
 			generateCompleteElement += res.data.text + '<br />';
 			generateCompleteElement += '<button ng-click="deleteTodoItem(\'' + res.data._id + '\', true)">';
-			generateCompleteElement += 'Done</button>';
+			generateCompleteElement += 'Delete Item</button>';
 
 			var compiledComplete = $compile(generateCompleteElement)($scope);
 			completeList.prepend(compiledComplete);

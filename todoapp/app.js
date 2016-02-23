@@ -21,9 +21,9 @@ var index = require('./routes/index.js');
 var items = require('./routes/todo.js');
 
 app.get('/', index.home);
-app.get('/remove/:id', items.removeItem);
-app.get('/complete/:id', items.completeItem);
 
+app.post('/remove/:id', items.removeItem);
+app.post('/complete/:id', items.completeItem);
 app.post('/add', items.addItem);
 app.post('/update', items.editItem);
 
