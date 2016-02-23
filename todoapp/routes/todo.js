@@ -4,10 +4,12 @@ var Item = require('../models/item.js');
 var addItem = function(req, res) {
 	var text = req.body.todo;
 	var date = new Date();
+	var completed = "false";
 
 	var item = new Item({
 		text:text,
-		timestamp:date
+		timestamp:date,
+		completed:completed
 	});
 
 	item.save(function(err, item) {
@@ -16,6 +18,17 @@ var addItem = function(req, res) {
 		} else {
 			res.send(item);
 		}
+	});
+};
+
+var completeItem = function(req, res) {
+	var completeId = req.params.id;
+	var completed = "true";
+	var completedDate = new Date();
+
+	Item.findOneAndUpdate({_id:completeId}, {'$set':{completed:completed, date:completedDate}}, {new:true}, function(err, item) {
+		var data = err ? {} : item;
+		res.send(data);
 	});
 };
 
@@ -53,3 +66,4 @@ var editItem = function(req, res) {
 module.exports.addItem = addItem;
 module.exports.removeItem = removeItem;
 module.exports.editItem = editItem;
+module.exports.completeItem = completeItem;

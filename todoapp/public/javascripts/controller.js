@@ -12,11 +12,13 @@ todoControllers.controller('todoCtrl', function($scope, $http, $compile) {
 		$http.post('/add', {'todo':text}).then(function(res) {
 			var span = '<span id="lesser_' + res.data._id + '" ng-click="convertToInput(\'' + res.data._id + '\')">' + res.data.text + '</span>'
 
-			var listElement = '<li id="' + res.data._id + '">';
+			var listElement = '<li id="incomplete_' + res.data._id + '">';
 			listElement += '<span id="greater_' + res.data._id + '">';
 			listElement += span + '</span><br />';
-			listElement += '<button ng-click="deleteTodoItem(\'' + res.data._id + '\')">'
-			listElement += 'Done</button>';
+			listElement += '<button ng-click="completeItem(\'' + res.data._id + '\')" >';
+			listElement += 'Complete</button> || ';
+			listElement += '<button ng-click="deleteTodoItem(\'' + res.data._id + '\', false)">';
+			listElement += 'Done</button></li>';
 
 			var compiledListElement = $compile(listElement)($scope);
 
@@ -27,11 +29,13 @@ todoControllers.controller('todoCtrl', function($scope, $http, $compile) {
 		});
 	}
 
-	$scope.deleteTodoItem = function(id) {
+	$scope.deleteTodoItem = function(id, isComplete) {
 		$http.get('/remove/' + id).then(function(res) {
-			var elementId = '[id=\'' + res.data._id + '\']';
+			var elementId = isComplete ? '#complete_' : '#incomplete_';
+			elementId += id;
 
 			var item = angular.element(document.querySelector(elementId));
+			console.log(item);
 			item.remove();
 		}, function(res) {
 			console.log('Error');
@@ -77,4 +81,24 @@ todoControllers.controller('todoCtrl', function($scope, $http, $compile) {
 			console.log('error');
 		});
 	}
+
+	$scope.completeItem = function(id) {
+		$http.get('/complete/' + id).then(function(res) {
+			var incompleteElement = angular.element(document.querySelector('#incomplete_' + id));
+			incompleteElement.remove();
+
+			var completeList = angular.element(document.querySelector('#completed'));
+
+			var generateCompleteElement = '<li id="complete_' + id + '">';
+			generateCompleteElement += res.data.text + '<br />';
+			generateCompleteElement += '<button ng-click="deleteTodoItem(\'' + res.data._id + '\', true)">';
+			generateCompleteElement += 'Done</button>';
+
+			var compiledComplete = $compile(generateCompleteElement)($scope);
+			completeList.prepend(compiledComplete);
+		}, function(res) {
+			console.log('error');
+			console.log(res);
+		});
+	} 
 });

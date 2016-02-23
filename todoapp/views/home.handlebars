@@ -4,17 +4,26 @@
 		<input type="submit" value="Add Item" />
 	</form>
 
+	<h1>To-Do List</h1>
 	<ul id="todo">
-		{{#each this.data}}
-			<li id="{{this._id}}">
+		{{#each incompleteItems}}
+			<li id="incomplete_{{this._id}}">
 				<span id="greater_{{this._id}}">
 					<span id="lesser_{{this._id}}" ng-click="convertToInput('{{this._id}}')">{{this.text}}</span>
 				</span>
 				<br />
-				<button ng-click="deleteTodoItem('{{this._id}}')">Done</li>
+				<button ng-click="completeItem('{{this._id}}')">Complete</button> || <button ng-click="deleteTodoItem('{{this._id}}', false)">Delete Item</button>
+			</li>
 		{{/each}}
 	</ul>
 
+	<h1>Completed Items</h1>
 	<ul id="completed">
+		{{#each completeItems}}
+			<li id="complete_{{this._id}}">
+				{{this.text}}<br />
+				<button ng-click="deleteTodoItem('{{this._id}}', true)">Delete Item</li>
+			</li>
+		{{/each}}
 	</ul>
 </div>
