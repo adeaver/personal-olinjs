@@ -1,0 +1,27 @@
+{
+  "name": "nodetodo",
+  "version": "1.0.0",
+  "description": "Olin JS To Do App",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adeaver/turbo-succotash.git"
+  },
+  "author": "Andrew Deaver",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adeaver/turbo-succotash/issues"
+  },
+  "homepage": "https://github.com/adeaver/turbo-succotash#readme",
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "express": "^4.13.4",
+    "express-handlebars": "^3.0.0",
+    "mongoose": "^4.4.4",
+    "node-mysql": "^0.4.2",
+    "path": "^0.12.7"
+  }
+}

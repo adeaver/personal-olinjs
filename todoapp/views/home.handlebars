@@ -1,0 +1,20 @@
+<div ng-controller="todoCtrl">
+	<form ng-submit="addTodoItem()">
+		<input type="text" name="todoitem" id="todoitem" placeholder="Add item to do" /><br />
+		<input type="submit" value="Add Item" />
+	</form>
+
+	<ul id="todo">
+		{{#each this.data}}
+			<li id="{{this._id}}">
+				<span id="greater_{{this._id}}">
+					<span id="lesser_{{this._id}}" ng-click="convertToInput('{{this._id}}')">{{this.text}}</span>
+				</span>
+				<br />
+				<button ng-click="deleteTodoItem('{{this._id}}')">Done</li>
+		{{/each}}
+	</ul>
+
+	<ul id="completed">
+	</ul>
+</div>
