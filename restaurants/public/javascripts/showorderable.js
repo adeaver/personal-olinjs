@@ -27,11 +27,17 @@ function setUpForm() {
 
 function sendData() {
 	var items = $(".order_item");
-	var baseUrl = "http://127.0.0.1:3000/order/add?";
 	var ids = "";
 	var amounts = "";
 	var price = $("#total_price").html().substring(1);
 
+	/* This is a great place= to use the functional jQuery each -- a little cleaner than
+		 having to index into a list everywhere
+
+		 items.each(function(anItem) {
+		   (do whatever inside)
+		 });
+	 */
 	for(var index = 0; index < items.length; index++) {
 		if(items[index].value > 0) {
 			var delimiter = index == items.length-1 ? "" : ",";
@@ -40,13 +46,19 @@ function sendData() {
 		}
 	}
 
-	var url = baseUrl + "names=" + ids;
-	url += "&amounts=" + amounts;
-	url += "&price=" + price;
-
 	$.ajax({
-		url:url,
-		success:function(result) {
+		url: '/order/add',
+		data: {
+			names: ids,
+			amounts: amounts,
+			price: price
+		},
+		/* Easier to send your data like this -- that way you don't need to string together URL query params
+
+			 The data should be accessible at `req.body` on the serverside -- as
+			 long as you're using bodyParser middleware (check `app.js`)
+		 */
+		success: function(result) {
 			console.log(url);
 			alert("Successfully added order");
 			setUpForm();
@@ -66,8 +78,10 @@ function buildInput(dataObject) {
 	var functionParam = "updatePrice(this, ";
 	functionParam += "'" + name + "', ";
 	functionParam += "'" + price + "', ";
-	functionParam += "'" + quantity + "')"; 
+	functionParam += "'" + quantity + "')";
 
+	// Check out this jsfiddle https://jsfiddle.net/swalters4925/e8gzd6h9/1/
+	// for an easier/cleaner way to construct structured HTML.
 	var input = "<input type=\"number\" ";
 	input += "name=\"" + name + "\" ";
 	input += "class=\"order_item\" ";
